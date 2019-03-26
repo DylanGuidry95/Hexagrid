@@ -10,7 +10,7 @@ public class TraversableNode : Node
 
     public float _travelCost;
     public float _hValue;
-    public float _gValue => GetGValue();
+    public float _gValue = 0;
     public float _fValue => (_hValue + _gValue);
 
 
@@ -21,23 +21,28 @@ public class TraversableNode : Node
 
     public static float Distance(TraversableNode aNode, TraversableNode bNode)
     {
-        float a = aNode._xCoord - bNode._xCoord;
-        float b = aNode._yCoord - bNode._yCoord;
+        float a = Mathf.Abs(aNode._xCoord - bNode._xCoord);
+        float b = Mathf.Abs(aNode._yCoord - bNode._yCoord);
 
-        a *= a;
-        b *= b;
+        //a *= a;
+        //b *= b;
 
-        return Mathf.Sqrt(a + b);
+        return a + b;
     }
 
-
-    private float GetGValue()
+    public void GetGValue()
     {
         if(_parentNode == null)
-            return 0f;
+            _gValue = 0;
         
         else
-            return _travelCost + _parentNode._gValue;
+        {
+            if(_parentNode._xCoord == _xCoord || _parentNode._yCoord == _yCoord)
+                _travelCost = 10;
+            else
+                _travelCost = 14;
+            _gValue = _travelCost + _parentNode._gValue;
+        }
     }
 
 

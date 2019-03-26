@@ -72,18 +72,24 @@ public class SpawnGrid : MonoBehaviour
                 gridNodes[i, j] = (gridCell.AddComponent<TraversableNode>());
                 gridNodes[i, j]._xCoord = i;
                 gridNodes[i, j]._yCoord = j;
-                gridNodes[i, j]._travelCost = height;
+                //gridNodes[i, j]._travelCost = height;
                 
                 if(j > 0)
+                {
                     gridNodes[i, j].AddNeighbor(gridNodes[i, j-1]);
+                    gridNodes[i, j-1]._travelCost = 14;
+                }
 
                 if(i > 0)
                 {
                     gridNodes[i, j].AddNeighbor(gridNodes[i-1, j]);
-
+                    gridNodes[i-1, j]._travelCost = 10;
                     int nextJ = j+(i%2==0?-1:1);
                     if(nextJ >= 0 && nextJ < rows)
+                    {
                         gridNodes[i, j].AddNeighbor(gridNodes[i-1, nextJ]);
+                        gridNodes[i-1, nextJ]._travelCost = 10;
+                    }
                 }
             }
         }

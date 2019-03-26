@@ -40,44 +40,46 @@ public sealed class NodePath : MonoBehaviour
 
         while(_openList.Count > 0)
         {
-            foreach(TraversableNode node in currentNode.GetNeighbors())
+            currentNode = _openList[0];
+            currentNode.GetComponent<Renderer>().material = current;            
+            _openList.Remove(currentNode);
+            _closedList.Add(currentNode);
+            currentNode.GetComponent<Renderer>().material = closed;
+            if(_closedList.Contains(_endNode))
             {
-                if(!_closedList.Contains(node) && !_openList.Contains(node))
-                {
-                    node._parentNode = node._parentNode == null ? currentNode : node._parentNode;
-
-                    node._hValue = TraversableNode.Distance(node, _endNode);
-                    // /node._gValue = TraversableNode.Distance(node, _startNode);
-
-                    AddToSortedList(node, ref _openList);
-                    node.GetComponent<Renderer>().material = open;
-                }
-
-                if(node == _endNode)
-                {
-                    TraversableNode n = node;
+                    TraversableNode n = _endNode;
                     while(n != null)
                     {
                         n.GetComponent<Renderer>().material = current;
                         n = n._parentNode;
                         yield return null;
                     }
-                    
-                    yield break;
-                }
-                
-                yield return null;
+                    yield break;            
             }
-
-            _closedList.Add(currentNode);
-            currentNode.GetComponent<Renderer>().material = closed;
-
-            currentNode = _openList[0];
-            currentNode.GetComponent<Renderer>().material = current;
-
-            _openList.Remove(currentNode);
-
-            yield return null;
+            foreach(TraversableNode node in currentNode.GetNeighbors())
+            {
+                if(!_closedList.Contains(node))
+                {
+                    if(_openList.Contains(node))
+                    {
+                        var tentG = currentNode._gValue + node._travelCost;
+                        if(tentG <= node._gValue)
+                        {
+                            node._parentNode = currentNode;
+                            node.GetGValue();
+                            break;
+                        }
+                    }
+                    else
+                    {                         
+                        node._parentNode = currentNode;
+                        node.GetGValue();
+                        node._hValue = TraversableNode.Distance(node, _endNode);
+                        AddToSortedList(node, ref _openList);
+                        node.GetComponent<Renderer>().material = open;
+                    }                
+                }                            
+            }            
         }
 
         yield return null;

@@ -6,7 +6,6 @@ public class Node : MonoBehaviour
 {
     private List<Node> _neighbors = new List<Node>();
 
-
     public Node[] GetNeighbors()
     {
         Node[] myNeighbors = _neighbors.ToArray();
@@ -15,14 +14,10 @@ public class Node : MonoBehaviour
 
     public int AddNeighbor(Node newNeighbor)
     {
-        if(newNeighbor == null)
+        if(newNeighbor == null || _neighbors.Contains(newNeighbor))
             return -1;
-
-        if(!_neighbors.Contains(newNeighbor))
-            _neighbors.Add(newNeighbor);
-
-        if(!newNeighbor._neighbors.Contains(this))
-            newNeighbor.AddNeighbor(this);
+        
+        _neighbors.Add(newNeighbor);                
 
         return 0;
     }
