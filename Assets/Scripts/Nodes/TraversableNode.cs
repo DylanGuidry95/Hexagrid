@@ -19,7 +19,11 @@ public class TraversableNode : Node
         set
         {
             _isOccupied = value;
-            if(_isOccupied) onOccupy.Invoke();
+            if (_isOccupied) {
+                
+                onOccupy.Invoke();
+                Debug.Log("off");
+            }
         }
     }
 
